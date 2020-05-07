@@ -9,8 +9,8 @@ const cors = require("cors");
 const app = express();
 
 const db = require("./db");
-
-const test = require("./routes/test");
+//require the route
+const exampleRoute = require("./routes/example_route");
 
 function read(file) {
   return new Promise((resolve, reject) => {
@@ -36,6 +36,8 @@ module.exports = function application(
   app.use(bodyparser.json());
 
   app.use("/", test(db));
+  //use the route passing the db as an argument
+  app.use("/api", exampleRoute(db));
 
 
   if (ENV === "development" || ENV === "test") {
