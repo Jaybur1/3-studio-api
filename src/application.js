@@ -12,6 +12,7 @@ const db = require("./db");
 //require the route
 const exampleRoute = require("./routes/example_route");
 
+/* eslint-disable */
 function read(file) {
   return new Promise((resolve, reject) => {
     fs.readFile(
@@ -42,7 +43,7 @@ module.exports = function application(
 
   if (ENV === "development" || ENV === "test") {
     Promise.all([
-      read(path.resolve(__dirname, `db/schema/create.sql`)),
+      read(path.resolve(__dirname, "db/schema/create.sql")),
       read(path.resolve(__dirname, `db/schema/${ENV}.sql`))
     ])
       .then(([create, seed]) => {
