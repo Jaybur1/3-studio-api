@@ -10,7 +10,8 @@ const app = express();
 
 const db = require("./db");
 //require the route
-const exampleRoute = require("./routes/example_route");
+// const exampleRoute = require("./routes/example_route");
+const projects = require("./routes/projects");
 
 /* eslint-disable */
 function read(file) {
@@ -18,7 +19,7 @@ function read(file) {
     fs.readFile(
       file,
       {
-        encoding: "utf-8"
+        encoding: "utf-8",
       },
       (error, data) => {
         if (error) return reject(error);
@@ -28,23 +29,17 @@ function read(file) {
   });
 }
 
-module.exports = function application(
-  ENV,
-  actions = { updateAppointment: () => {} }
-) {
+module.exports = function application(ENV) {
   app.use(cors());
   app.use(helmet());
   app.use(bodyparser.json());
-
-  app.use("/", test(db));
   //use the route passing the db as an argument
-  app.use("/api", exampleRoute(db));
-
+  app.use("/api", projects(db));
 
   if (ENV === "development" || ENV === "test") {
     Promise.all([
-      read(path.resolve(__dirname, "db/schema/create.sql")),
-      read(path.resolve(__dirname, `db/schema/${ENV}.sql`))
+      read(path.resolve(__dirname, `db/schema/create.sql`)),
+      read(path.resolve(__dirname, `db/schema/${ENV}.sql`)),
     ])
       .then(([create, seed]) => {
         app.get("/api/debug/reset", (request, response) => {
@@ -56,12 +51,12 @@ module.exports = function application(
             });
         });
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(`Error setting up the reset route: ${error}`);
       });
   }
 
-  app.close = function() {
+  app.close = function () {
     return db.end();
   };
 
