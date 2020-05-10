@@ -64,5 +64,11 @@ module.exports = (db) => {
       }
     });
   });
+  
+  // test cloudinary get
+  router.get("/cloud", (request, response) => {
+    response.status(200).json({})
+  })
+  
   return router;
 };
