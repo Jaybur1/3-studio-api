@@ -19,7 +19,7 @@ module.exports = db => {
 
   //Update an existing project
   router.put("/projects", (request, response) => {
-    db.query(("UPDATE projects SET name=$1, description=$2 WHERE id=$3 user_id=$4"), [request.body.project.name, request.body.project.description, request.body.project.id, request.body.userId]).then((resp) => {
+    db.query(("UPDATE projects SET name=$1, description=$2 WHERE id=$3 AND user_id=$4"), [request.body.project.name, request.body.project.description, request.body.project.id, request.body.userId]).then((resp) => {
       if (resp.rowCount === 0) {
         setTimeout(() => {
           response.status(400).json({});

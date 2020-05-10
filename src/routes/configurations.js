@@ -10,7 +10,7 @@ module.exports = db => {
 
   //Create a new configuration
   router.post("/configurations", (request, response) => {
-    db.query(("INSERT INTO configurations VALUES ($1, $2, $3)"), [request.body.configuration.name, request.body.configuration.projectId, request.body.configuration.configurationData]).then((resp) => {
+    db.query(("INSERT INTO configurations VALUES ($1, $2, $3)"), [request.body.configuration.name, request.body.configuration.projectId, request.body.configuration.data]).then((resp) => {
       setTimeout(() => {
         response.status(400).json({});
       }, 2000);
@@ -19,7 +19,7 @@ module.exports = db => {
 
   //Update an existing configuration
   router.put("/configurations", (request, response) => {
-    db.query(("UPDATE configurations SET name=$1, config_data=$2 WHERE project_id=$3"), [request.body.configuration.name, request.body.configurationData, request.body.configuration.projectId]).then((resp) => {
+    db.query(("UPDATE configurations SET name=$1, config_data=$2 FROM projects WHERE configurations.id=$3 and projects.user_id=$4"), [request.body.configuration.name, request.body.configuration.data, request.body.configuration.id, request.body.userId]).then((resp) => {
       if (resp.rowCount === 0) {
         setTimeout(() => {
           response.status(400).json({});
@@ -34,7 +34,7 @@ module.exports = db => {
 
   //Delete a configuration
   router.delete("/configurations", (request, response) => {
-    db.query(("DELETE FROM configurations WHERE id=$1 AND project_id=$2"), [request.body.configurations.id, request.body.configurations.projectId]).then((resp) => {
+    db.query(("DELETE FROM configurations USING projects WHERE configurations.id=$1 AND projects.user_id=$2"), [request.body.configurationId, request.body.userId]).then((resp) => {
       if (resp.rowCount === 0) {
         // ? Simulate delay
         setTimeout(() => {
@@ -54,4 +54,5 @@ module.exports = db => {
 };
 
 
-UPDATE configurations SET name='new_rocket_config', config_data='new_rocket_config_data' WHERE project_id=1;
+
+
