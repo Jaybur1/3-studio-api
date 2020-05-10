@@ -16,27 +16,25 @@ VALUES
 
 
 INSERT INTO configurations
-  (name, project_id, config_data, created_at, updated_at)
+  (name, project_id, config_data)
 VALUES
   (
     'rocket-config-1',
     1,
-    'rocket config 1 data',
-    '2020-10-11',
-    '2020-10-11'
+    'rocket config 1 data'
 ),
 
   (
     'mustard-config-1',
     2,
-    'mustard config 1 data',
-    '2020-10-11',
-    '2020-10-11'
+    'mustard config 1 data'
 ),
   (
     'duck-config-1',
     3,
-    'duck config 1 data',
-    '2020-10-11',
-    '2020-10-11'
+    'duck config 1 data'
 );
+
+
+
+
