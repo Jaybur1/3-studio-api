@@ -12,6 +12,7 @@ const db = require("./db");
 //require the route
 // const exampleRoute = require("./routes/example_route");
 const projects = require("./routes/projects");
+const configurations = require("./routes/configurations");
 
 /* eslint-disable */
 function read(file) {
@@ -35,6 +36,7 @@ module.exports = function application(ENV) {
   app.use(bodyparser.json());
   //use the route passing the db as an argument
   app.use("/api", projects(db));
+  app.use("/api", configurations(db));
 
   if (ENV === "development" || ENV === "test") {
     Promise.all([
