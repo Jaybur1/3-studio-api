@@ -1,14 +1,21 @@
 const router = require("express").Router();
+const cloudinary = require("cloudinary");
 
-module.exports = (db) => {
-  //Get all projects
+cloudinary.config({
+  cloud_name: "aajfinal",
+  api_key: "463438241363482",
+  api_secret: "tq2iVv3TvB-O8JRKH0FRGjtkWrs"
+});
+
+module.exports = db => {
+  // Get all projects
   router.get("/projects", (request, response) => {
-    db.query("SELECT * FROM projects").then((data) => {
+    db.query("SELECT * FROM projects").then(data => {
       response.json(data.rows);
     });
   });
 
-  //Create a new project
+  // Create a new project
   router.post("/projects", (request, response) => {
     const { name, description, userId, modelLink } = request.body;
     console.log(request.body);
@@ -16,13 +23,13 @@ module.exports = (db) => {
       "INSERT INTO projects (name, description, user_id, model_link) VALUES ($1, $2, $3, $4) RETURNING *",
       [name, description, userId, modelLink]
     )
-      .then((resp) => {
+      .then(resp => {
         response.send(resp);
       })
-      .then((err) => console.log(err));
+      .then(err => console.log(err));
   });
 
-  //Update an existing project
+  // Update an existing project
   router.put("/projects", (request, response) => {
     db.query(
       "UPDATE projects SET name=$1, description=$2 WHERE id=$3 AND user_id=$4",
@@ -30,9 +37,9 @@ module.exports = (db) => {
         request.body.project.name,
         request.body.project.description,
         request.body.project.id,
-        request.body.userId,
+        request.body.userId
       ]
-    ).then((resp) => {
+    ).then(resp => {
       if (resp.rowCount === 0) {
         setTimeout(() => {
           response.status(400).json({});
@@ -45,12 +52,12 @@ module.exports = (db) => {
     });
   });
 
-  //Delete a project
+  // Delete a project
   router.delete("/projects", (request, response) => {
     db.query("DELETE FROM projects WHERE id=$1 AND user_id=$2", [
       request.body.projectId,
-      request.body.userId,
-    ]).then((resp) => {
+      request.body.userId
+    ]).then(resp => {
       if (resp.rowCount === 0) {
         // ? Simulate delay
         setTimeout(() => {
@@ -64,11 +71,19 @@ module.exports = (db) => {
       }
     });
   });
-  
+
   // test cloudinary get
   router.get("/cloud", (request, response) => {
-    response.status(200).json({})
-  })
-  
+    response.status(200).json({});
+
+    cloudinary.v2.api.resources(function(error, result) {
+      console.log(
+        result.rate_limit_allowed,
+        result.rate_limit_remaining,
+        result.rate_limit_reset_at
+      );
+    });
+  });
+
   return router;
 };
