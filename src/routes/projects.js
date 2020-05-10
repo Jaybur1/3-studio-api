@@ -8,10 +8,20 @@ module.exports = db => {
   });
 
   router.delete("/projects", (request, response) => {
-    console.log(request);
-    db.query(("DELETE FROM projects WHERE id=$1 AND user_id=$2"), [request.data.projectId, request.data.userID]).then(() => {
-      response.status = 200;
-    }).catch(response.status = 400);
+    console.log(request.body);
+    db.query(("DELETE FROM projects WHERE id=$1 AND user_id=$2"), [request.body.projectId, request.body.userId]).then((resp) => {
+      if(resp.rowCount === 0) {
+        // ? Simulate delay
+        setTimeout(() => {
+          response.status(400).json({});
+        }, 2000)
+      } else {
+        // ? Simulate delay
+        setTimeout(() => {
+          response.status(200).json({});
+        }, 2000)
+      }
+    })
   });
 
   return router;
