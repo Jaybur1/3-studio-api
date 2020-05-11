@@ -29,4 +29,9 @@ const deleteProjectFolder = projectId =>
     .delete_resources_by_prefix(`screenshots/${projectId}`)
     .then(() => cloudinary.v2.api.delete_folder(`screenshots/${projectId}`));
 
+const createProjectFolder = projectId =>
+  cloudinary.v2.api
+    .delete_resources_by_prefix(`screenshots/${projectId}`)
+    .then(() => cloudinary.v2.api.delete_folder(`screenshots/${projectId}`));
+
 module.exports = { getScreenshotsForProject, deleteProjectFolder };
