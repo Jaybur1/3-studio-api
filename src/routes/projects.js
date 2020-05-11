@@ -8,11 +8,33 @@ cloudinary.config({
 });
 
 module.exports = db => {
-  // Get all projects
+  // Get all projects and their screenshots
   router.get("/projects", (request, response) => {
-    db.query("SELECT * FROM projects").then(data => {
-      response.json(data.rows);
-    });
+    db.query("SELECT * FROM projects WHERE user_id=$1", [
+      "google-oauth2|117948270148318970184"
+    ])
+      .then(data => {
+        data.rows.forEach(element => {
+          cloudinary.v2.search
+            .expression(`folder=screenshots/${element.id}`)
+            .execute()
+            .then(result => {
+              const screenshots = [];
+              // Extract label and path of screenshot and push to new array
+              result.resources.forEach(resource => {
+                screenshots.push({
+                  label: resource.filename,
+                  path: resource.url
+                });
+
+                element.screenshots = screenshots;
+              });
+              response.status(200).json({ projects: data.rows });
+            });
+        });
+      })
+
+      .catch(err => console.log(err));
   });
 
   // Create a new project
