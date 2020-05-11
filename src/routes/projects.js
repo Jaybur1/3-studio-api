@@ -17,7 +17,11 @@ module.exports = (db) => {
       [name, description, userId, modelLink]
     )
       .then((resp) => {
-        response.send(resp);
+        // response.send(resp.rows);
+        const {user_id, updated_at, model_link, default_thumbnail, created_at, id, name, description} = resp.rows[0];
+
+        const projectData = {id, name, description, userId: user_id, updatedAt:updated_at, modelLink: model_link, screenshots:[{path:default_thumbnail, label:"default_pic"}], createdAt: created_at};
+        response.send(projectData);
       })
       .then((err) => console.log(err));
   });
