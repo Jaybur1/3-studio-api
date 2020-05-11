@@ -1,11 +1,4 @@
 const router = require("express").Router();
-const cloudinary = require("cloudinary");
-
-cloudinary.config({
-  cloud_name: "aajfinal",
-  api_key: "463438241363482",
-  api_secret: "tq2iVv3TvB-O8JRKH0FRGjtkWrs"
-});
 
 module.exports = db => {
   // Get all projects
@@ -69,19 +62,6 @@ module.exports = db => {
           response.status(200).json({});
         }, 2000);
       }
-    });
-  });
-
-  // test cloudinary get
-  router.get("/cloud", (request, response) => {
-    response.status(200).json({});
-
-    cloudinary.v2.api.resources(function(error, result) {
-      console.log(
-        result.rate_limit_allowed,
-        result.rate_limit_remaining,
-        result.rate_limit_reset_at
-      );
     });
   });
 
