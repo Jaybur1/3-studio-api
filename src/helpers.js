@@ -30,8 +30,10 @@ const deleteProjectFolder = projectId =>
     .then(() => cloudinary.v2.api.delete_folder(`screenshots/${projectId}`));
 
 const createProjectFolder = projectId =>
-  cloudinary.v2.api
-    .delete_resources_by_prefix(`screenshots/${projectId}`)
-    .then(() => cloudinary.v2.api.delete_folder(`screenshots/${projectId}`));
+  cloudinary.v2.api.create_folder(`screenshots/${projectId}`);
 
-module.exports = { getScreenshotsForProject, deleteProjectFolder };
+module.exports = {
+  getScreenshotsForProject,
+  deleteProjectFolder,
+  createProjectFolder
+};
