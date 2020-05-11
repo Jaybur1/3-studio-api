@@ -79,6 +79,7 @@ module.exports = db => {
 
   // Update an existing project
   router.put("/projects", (request, response) => {
+    console.log(response.body);
     db.query(
       "UPDATE projects SET name=$1, description=$2 WHERE id=$3 AND user_id=$4",
       [
