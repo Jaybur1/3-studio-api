@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { getScreenshotsForProject } = require("../helpers");
+const { getScreenshotsForProject, deleteProjectFolder } = require("../helpers");
 
 module.exports = db => {
   // Get all projects and their screenshots
@@ -105,19 +105,20 @@ module.exports = db => {
     db.query("DELETE FROM projects WHERE id=$1 AND user_id=$2", [
       request.body.projectId,
       request.body.userId
-    ]).then(resp => {
-      if (resp.rowCount === 0) {
-        // ? Simulate delay
-        setTimeout(() => {
+    ])
+      .then(resp => {
+        if (resp.rowCount === 0) {
           response.status(400).json({});
-        }, 2000);
-      } else {
-        // ? Simulate delay
-        setTimeout(() => {
-          response.status(200).json({});
-        }, 2000);
-      }
-    });
+        } else {
+          deleteProjectFolder(request.body.projectId).then(() => {
+            response.status(200).json({});
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        response.status(400).json({});
+      });
   });
 
   return router;
