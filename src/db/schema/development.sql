@@ -66,7 +66,8 @@ INSERT INTO themes
 VALUES
   ('facebook|10158865693899363', 'electric violet'),
   ('google-oauth2|117948270148318970184', 'sea weed'),
-  ('auth0|5eb6f6ab1cc1ac0c14984e4e', 'dimigo')
+  ('auth0|5eb6f6ab1cc1ac0c14984e4e', 'dimigo'),
+  ('auth0|5eb850cb1cc1ac0c149bee47','cherry')
 
 
 
