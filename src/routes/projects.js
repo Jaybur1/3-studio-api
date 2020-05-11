@@ -19,6 +19,27 @@ module.exports = db => {
             .expression(`folder=screenshots/${element.id}`)
             .execute()
             .then(result => {
+              const {
+                user_id,
+                updated_at,
+                model_link,
+                default_thumbnail,
+                created_at,
+                id,
+                name,
+                description
+              } = element;
+
+              const info = {
+                userId: user_id,
+                updatedAt: updated_at,
+                modelLink: model_link,
+                defaultThumbnail: default_thumbnail,
+                createdAt: created_at,
+                id,
+                name,
+                description
+              };
               const screenshots = [];
               // Extract label and path of screenshot and push to new array
               result.resources.forEach(resource => {
@@ -27,9 +48,9 @@ module.exports = db => {
                   path: resource.url
                 });
 
-                element.screenshots = screenshots;
+                info.screenshots = screenshots;
               });
-              response.status(200).json({ projects: data.rows });
+              response.status(200).json({ projects: info });
             });
         });
       })
