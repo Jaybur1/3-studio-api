@@ -13,7 +13,10 @@ const db = require("./db");
 // const exampleRoute = require("./routes/example_route");
 const projects = require("./routes/projects");
 const configurations = require("./routes/configurations");
+
 const screenshots = require("./routes/screenshots");
+
+const themes = require("./routes/themes");
 
 /* eslint-disable */
 function read(file) {
@@ -39,6 +42,7 @@ module.exports = function application(ENV) {
   app.use("/api", projects(db));
   app.use("/api", configurations(db));
   app.use("/api", screenshots(db));
+  app.use("/api", themes(db));
 
   if (ENV === "development" || ENV === "test") {
     Promise.all([
