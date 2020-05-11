@@ -1,60 +1,43 @@
 const router = require("express").Router();
-const cloudinary = require("cloudinary");
-
-cloudinary.config({
-  cloud_name: "aajfinal",
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET
-});
+const { getScreenshotsForProject } = require("../helpers");
 
 module.exports = db => {
   // Get all projects and their screenshots
   router.get("/projects", (request, response) => {
-    db.query("SELECT * FROM projects WHERE user_id=$1", [
-      "google-oauth2|117948270148318970184"
-    ])
-      .then(data => {
-        data.rows.forEach(element => {
-          cloudinary.v2.search
-            .expression(`folder=screenshots/${element.id}`)
-            .execute()
-            .then(result => {
-              const {
-                user_id,
-                updated_at,
-                model_link,
-                default_thumbnail,
-                created_at,
-                id,
-                name,
-                description
-              } = element;
+    const info = [];
 
-              const info = {
-                userId: user_id,
-                updatedAt: updated_at,
-                modelLink: model_link,
-                defaultThumbnail: default_thumbnail,
-                createdAt: created_at,
-                id,
-                name,
-                description
-              };
-              const screenshots = [];
-              // Extract label and path of screenshot and push to new array
-              result.resources.forEach(resource => {
-                screenshots.push({
-                  label: resource.filename,
-                  path: resource.url
-                });
+    db.query("SELECT * FROM projects WHERE user_id=$1", [request.query.userId])
+      .then(async data => {
+        for (const element of data.rows) {
+          const {
+            user_id,
+            updated_at,
+            model_link,
+            default_thumbnail,
+            created_at,
+            id,
+            name,
+            description
+          } = element;
 
-                info.screenshots = screenshots;
-              });
-              response.status(200).json({ projects: info });
-            });
-        });
+          const screenshots = await getScreenshotsForProject(element.id);
+
+          const elementInfo = {
+            userId: user_id,
+            updatedAt: updated_at,
+            modelLink: model_link,
+            defaultThumbnail: default_thumbnail,
+            createdAt: created_at,
+            id,
+            name,
+            description,
+            screenshots
+          };
+
+          info.push(await elementInfo);
+        }
+        response.status(200).json({ projects: await info });
       })
-
       .catch(err => console.log(err));
   });
 

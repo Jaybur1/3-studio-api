@@ -7,7 +7,7 @@ VALUES
   (
     'rocket',
     'a model of a rocket ship and a planet',
-    'google-oauth2|117948270148318970184',
+    'facebook|10158865693899363',
     'https://res.cloudinary.com/aajfinal/raw/upload/v1589051908/models/rocket_kcy5w0.glb'
   ),
   ('mustard', 'mustard bottle!', 'auth0|5eb6f6ab1cc1ac0c14984e4e', 'https://res.cloudinary.com/aajfinal/raw/upload/v1589051277/models/mustard_mhxcwm.glb'),
