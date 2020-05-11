@@ -1,4 +1,5 @@
 const cloudinary = require("cloudinary");
+const axios = require("axios");
 
 cloudinary.config({
   cloud_name: "aajfinal",
@@ -30,7 +31,9 @@ const deleteProjectFolder = projectId =>
     .then(() => cloudinary.v2.api.delete_folder(`screenshots/${projectId}`));
 
 const createProjectFolder = projectId =>
-  cloudinary.v2.api.create_folder(`screenshots/${projectId}`);
+  axios.post(
+    `https://${process.env.CLOUDINARY_API_KEY}:${process.env.CLOUDINARY_API_SECRET}@api.cloudinary.com/v1_1/aajfinal/folders/screenshots/${projectId}`
+  );
 
 module.exports = {
   getScreenshotsForProject,

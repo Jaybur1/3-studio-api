@@ -1,5 +1,9 @@
 const router = require("express").Router();
-const { getScreenshotsForProject, deleteProjectFolder } = require("../helpers");
+const {
+  getScreenshotsForProject,
+  deleteProjectFolder,
+  createProjectFolder
+} = require("../helpers");
 
 module.exports = db => {
   // Get all projects and their screenshots
@@ -48,33 +52,35 @@ module.exports = db => {
     db.query(
       "INSERT INTO projects (name, description, user_id, model_link) VALUES ($1, $2, $3, $4) RETURNING *",
       [name, description, userId, modelLink]
-    )
-      .then(resp => {
-        // response.send(resp.rows);
-        const {
-          user_id,
-          updated_at,
-          model_link,
-          default_thumbnail,
-          created_at,
-          id,
-          name,
-          description
-        } = resp.rows[0];
+    ).then(resp => {
+      // response.send(resp.rows);
+      const {
+        user_id,
+        updated_at,
+        model_link,
+        default_thumbnail,
+        created_at,
+        id,
+        name,
+        description
+      } = resp.rows[0];
 
-        const projectData = {
-          id,
-          name,
-          description,
-          userId: user_id,
-          updatedAt: updated_at,
-          modelLink: model_link,
-          screenshots: [{ path: default_thumbnail, label: "default_pic" }],
-          createdAt: created_at
-        };
-        response.send(projectData);
-      })
-      .then(err => console.log(err));
+      const projectData = {
+        id,
+        name,
+        description,
+        userId: user_id,
+        updatedAt: updated_at,
+        modelLink: model_link,
+        screenshots: [{ path: default_thumbnail, label: "default_pic" }],
+        createdAt: created_at
+      };
+      createProjectFolder(id)
+        .then(() => {
+          response.send(projectData);
+        })
+        .catch(err => console.log(err));
+    });
   });
 
   // Update an existing project
