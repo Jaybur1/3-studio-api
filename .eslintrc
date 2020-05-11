@@ -1,0 +1,23 @@
+{
+  "extends": ["wesbos"],
+  "rules": {
+    "no-plusplus": [
+      "error",
+      {
+        "allowForLoopAfterthoughts": true
+      }
+    ],
+    "quotes": ["error", "double"],
+    "prettier/prettier": [
+      "error",
+      {
+        "singleQuote": false
+      }
+    ],
+    "react/destructuring-assignment": [
+      <enabled>,
+      "always",
+      { "ignoreClassFields": true }
+    ]
+  }
+}

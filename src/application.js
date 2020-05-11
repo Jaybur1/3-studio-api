@@ -9,10 +9,11 @@ const cors = require("cors");
 const app = express();
 
 const db = require("./db");
-//require the route
+// require the route
 // const exampleRoute = require("./routes/example_route");
 const projects = require("./routes/projects");
 const configurations = require("./routes/configurations");
+const screenshots = require("./routes/screenshots");
 
 /* eslint-disable */
 function read(file) {
@@ -37,6 +38,7 @@ module.exports = function application(ENV) {
   //use the route passing the db as an argument
   app.use("/api", projects(db));
   app.use("/api", configurations(db));
+  app.use("/api", screenshots(db));
 
   if (ENV === "development" || ENV === "test") {
     Promise.all([
