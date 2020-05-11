@@ -7,20 +7,32 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-module.exports = db => {
-  // test cloudinary get
-  router.get("/cloud", (request, response) => {
+module.exports = () => {
+  router.get("/screenshots", (request, response) => {
     cloudinary.v2.search
-      .expression("folder=screenshots/1")
+      .expression(`folder=screenshots/${request.query.projectId}`)
       .execute()
       .then(result => {
-        console.log(result.resources[1].url);
+        const screenshots = [];
+
+        // Extract label and path of screenshot and push to new array
+        result.resources.forEach(resource => {
+          screenshots.push({
+            label: resource.filename,
+            path: resource.url
+          });
+        });
+
+        // Send screenshots
         response.status(200).json({
-          url: result.resources
+          screenshots
         });
       })
       .catch(err => {
         console.log(err);
+
+        // Send error status
+        response.status(400).json({});
       });
   });
 
