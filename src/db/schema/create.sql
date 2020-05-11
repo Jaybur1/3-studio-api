@@ -2,6 +2,8 @@ DROP TABLE IF EXISTS projects
 CASCADE;
 DROP TABLE IF EXISTS configurations
 CASCADE;
+DROP TABLE IF EXISTS themes
+CASCADE;
 
 CREATE TABLE projects
 (
@@ -28,3 +30,10 @@ CREATE TABLE projects
   updated_at TIMESTAMP
     WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+    CREATE TABLE themes
+    (
+      id SERIAL PRIMARY KEY NOT NULL,
+      user_id VARCHAR(255) NOT NULL,
+      theme VARCHAR(255) NOT NULL DEFAULT 'cherry'
+    );
