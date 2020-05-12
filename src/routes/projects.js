@@ -2,16 +2,16 @@ const router = require("express").Router();
 const {
   getScreenshotsForProject,
   deleteProjectFolder,
-  createProjectFolder
+  createProjectFolder,
 } = require("../helpers");
 
-module.exports = db => {
+module.exports = (db) => {
   // Get all projects and their screenshots
   router.get("/projects", (request, response) => {
     const info = [];
 
     db.query("SELECT * FROM projects WHERE user_id=$1", [request.query.userId])
-      .then(async data => {
+      .then(async (data) => {
         for (const element of data.rows) {
           const {
             user_id,
@@ -21,7 +21,7 @@ module.exports = db => {
             created_at,
             id,
             name,
-            description
+            description,
           } = element;
 
           const screenshots = await getScreenshotsForProject(element.id);
@@ -35,14 +35,14 @@ module.exports = db => {
             id,
             name,
             description,
-            screenshots
+            screenshots,
           };
 
           info.push(await elementInfo);
         }
         response.status(200).json({ projects: await info });
       })
-      .catch(err => console.log(err));
+      .catch((err) => console.log(err));
   });
 
   // Create a new project
@@ -52,7 +52,7 @@ module.exports = db => {
     db.query(
       "INSERT INTO projects (name, description, user_id, model_link) VALUES ($1, $2, $3, $4) RETURNING *",
       [name, description, userId, modelLink]
-    ).then(resp => {
+    ).then((resp) => {
       // response.send(resp.rows);
       const {
         user_id,
@@ -62,7 +62,8 @@ module.exports = db => {
         created_at,
         id,
         name,
-        description
+        description,
+        counter,
       } = resp.rows[0];
 
       const projectData = {
@@ -73,13 +74,14 @@ module.exports = db => {
         updatedAt: updated_at,
         modelLink: model_link,
         screenshots: [{ path: default_thumbnail, label: "default_pic" }],
-        createdAt: created_at
+        counter,
+        createdAt: created_at,
       };
       createProjectFolder(id)
         .then(() => {
           response.send(projectData);
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     });
   });
 
@@ -92,9 +94,9 @@ module.exports = db => {
         request.body.project.name,
         request.body.project.description,
         request.body.project.id,
-        request.body.userId
+        request.body.userId,
       ]
-    ).then(resp => {
+    ).then((resp) => {
       if (resp.rowCount === 0) {
         setTimeout(() => {
           response.status(400).json({});
@@ -111,9 +113,9 @@ module.exports = db => {
   router.delete("/projects", (request, response) => {
     db.query("DELETE FROM projects WHERE id=$1 AND user_id=$2", [
       request.body.projectId,
-      request.body.userId
+      request.body.userId,
     ])
-      .then(resp => {
+      .then((resp) => {
         if (resp.rowCount === 0) {
           response.status(400).json({});
         } else {
@@ -122,7 +124,23 @@ module.exports = db => {
           });
         }
       })
-      .catch(err => {
+      .catch((err) => {
+        console.log(err);
+        response.status(400).json({});
+      });
+  });
+
+  router.put("/projects/counter", (request, response) => {
+    const { projectId, currentCount, currentUser } = request.body;
+    db.query("UPDATE projects SET counter=$1 WHERE id=$2 AND user_id=$3", [
+      currentCount,
+      projectId,
+      currentUser,
+    ])
+      .then((resp) => {
+        response.status(200).json({});
+      })
+      .catch((err) => {
         console.log(err);
         response.status(400).json({});
       });
