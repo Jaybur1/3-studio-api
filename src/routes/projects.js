@@ -22,6 +22,7 @@ module.exports = (db) => {
             id,
             name,
             description,
+            counter,
           } = element;
 
           const screenshots = await getScreenshotsForProject(element.id);
@@ -35,6 +36,7 @@ module.exports = (db) => {
             id,
             name,
             description,
+            counter,
             screenshots,
           };
 
@@ -131,11 +133,11 @@ module.exports = (db) => {
   });
 
   router.put("/projects/counter", (request, response) => {
-    const { projectId, currentCount, currentUser } = request.body;
+    const { userId, counter, projectId } = request.body;
     db.query("UPDATE projects SET counter=$1 WHERE id=$2 AND user_id=$3", [
-      currentCount,
+      counter,
       projectId,
-      currentUser,
+      userId,
     ])
       .then((resp) => {
         response.status(200).json({});
