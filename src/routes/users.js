@@ -1,16 +1,34 @@
 const axios = require("axios");
 const router = require("express").Router();
-const request = require("request");
 
 module.exports = () => {
+  // Edit user details
   router.put("/users", (req, resp) => {
     axios
       .patch(
         `https://dev-1ee5do6a.auth0.com/api/v2/users/${req.body.userId}`,
         {
-          name: "name_tester",
-          nickname: "nickname_tester"
+          name: "name_testerrrrr",
+          nickname: "nickname_testerrrrr"
         },
+        {
+          headers: {
+            "content-type": "application/json",
+            Authorization: `Bearer ${MGMT_API_ACCESS_TOKEN}`,
+            "cache-control": "no-cache"
+          }
+        }
+      )
+      .then(response => console.log(response))
+      .catch(error => console.log(error));
+  });
+
+  // Delete user (deactivate)
+  router.delete("/users", (req, resp) => {
+    console.log(req.body);
+    axios
+      .delete(
+        `https://dev-1ee5do6a.auth0.com/api/v2/users/${req.body.userId}`,
         {
           headers: {
             "content-type": "application/json",
