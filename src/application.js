@@ -17,6 +17,7 @@ const configurations = require("./routes/configurations");
 const screenshots = require("./routes/screenshots");
 
 const themes = require("./routes/themes");
+const users = require("./routes/users");
 
 /* eslint-disable */
 function read(file) {
@@ -43,6 +44,7 @@ module.exports = function application(ENV) {
   app.use("/api", configurations(db));
   app.use("/api", screenshots(db));
   app.use("/api", themes(db));
+  app.use("/api", users());
 
   if (ENV === "development" || ENV === "test") {
     Promise.all([
