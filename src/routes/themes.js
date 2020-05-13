@@ -7,6 +7,7 @@ module.exports = db => {
       request.query.userId
     ])
       .then(resp => {
+        console.log(resp.rows);
         if (resp.rowCount === 0) {
           response.status(400).json({});
         } else {
@@ -27,7 +28,16 @@ module.exports = db => {
     ])
       .then(resp => {
         if (resp.rowCount === 0) {
-          response.status(400).json({});
+          db.query("INSERT INTO themes (user_id) VALUES ($1)", [
+            request.body.userId
+          ])
+            .then(res => {
+              response.status(200).json({});
+            })
+            .catch(err => {
+              console.log(err);
+              response.status(400).json({});
+            });
         } else {
           response.status(200).json({});
         }

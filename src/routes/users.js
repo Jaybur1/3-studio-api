@@ -3,13 +3,14 @@ const router = require("express").Router();
 const request = require("request");
 
 module.exports = () => {
+  // Edit user details
   router.put("/users", (req, resp) => {
     axios
       .patch(
         `https://dev-1ee5do6a.auth0.com/api/v2/users/${req.body.userId}`,
         {
-          name: "name_tester",
-          nickname: "nickname_tester"
+          name: "ahmed",
+          nickname: "warda"
         },
         {
           headers: {
@@ -21,6 +22,44 @@ module.exports = () => {
       )
       .then(response => console.log(response))
       .catch(error => console.log(error));
+  });
+
+  // Delete user (deactivate)
+  router.delete("/users", (req, resp) => {
+    axios
+      .delete(
+        `https://dev-1ee5do6a.auth0.com/api/v2/users/${req.body.userId}`,
+        {
+          headers: {
+            "content-type": "application/json",
+            Authorization: `Bearer ${MGMT_API_ACCESS_TOKEN}`,
+            "cache-control": "no-cache"
+          }
+        }
+      )
+      .then(response => console.log(response))
+      .catch(error => console.log(error));
+  });
+
+  // Reset password (sends email to user)
+  router.post("/users", (req, resp) => {
+    const options = {
+      method: "POST",
+      url: "https://dev-1ee5do6a.auth0.com/dbconnections/change_password",
+      headers: { "content-type": "application/json" },
+      body: {
+        client_id: "IysHD3AMe37ZsxVf0cW9TfVDMDjJ0VHv",
+        email: req.body.email,
+        connection: "Username-Password-Authentication"
+      },
+      json: true
+    };
+
+    request(options, function(error, response, body) {
+      if (error) throw new Error(error);
+
+      console.log(body);
+    });
   });
   return router;
 };
