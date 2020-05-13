@@ -20,8 +20,11 @@ module.exports = () => {
           }
         }
       )
-      .then(response => console.log(response))
-      .catch(error => console.log(error));
+      .then(response => resp.status(200).json({}))
+      .catch(error => {
+        console.log(error);
+        resp.status(400).json({});
+      });
   });
 
   // Delete user (deactivate)
@@ -37,8 +40,13 @@ module.exports = () => {
           }
         }
       )
-      .then(response => console.log(response))
-      .catch(error => console.log(error));
+      .then(response => {
+        resp.status(200).json({});
+      })
+      .catch(error => {
+        console.log(error);
+        resp.status(400).json({});
+      });
   });
 
   // Reset password (sends email to user)
@@ -56,9 +64,12 @@ module.exports = () => {
     };
 
     request(options, function(error, response, body) {
-      if (error) throw new Error(error);
-
-      console.log(body);
+      if (error) {
+        throw new Error(error);
+      } else {
+        console.log(body);
+        response.status(200).json({});
+      }
     });
   });
   return router;

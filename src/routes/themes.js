@@ -20,7 +20,7 @@ module.exports = db => {
       });
   });
 
-  // Update theme of user
+  // Update theme of existing user or add theme for new user
   router.put("/themes", (request, response) => {
     db.query("UPDATE themes SET theme=$1 WHERE user_id=$2", [
       request.body.theme,
