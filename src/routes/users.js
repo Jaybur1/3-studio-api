@@ -51,6 +51,7 @@ module.exports = () => {
 
   // Reset password (sends email to user)
   router.post("/users", (req, resp) => {
+    console.log("receiveddd");
     const options = {
       method: "POST",
       url: "https://dev-1ee5do6a.auth0.com/dbconnections/change_password",
@@ -65,10 +66,11 @@ module.exports = () => {
 
     request(options, function(error, response, body) {
       if (error) {
+        resp.status(400).json({});
         throw new Error(error);
       } else {
         console.log(body);
-        response.json();
+        resp.status(200).json({});
       }
     });
   });
