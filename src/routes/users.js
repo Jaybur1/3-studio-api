@@ -68,7 +68,7 @@ module.exports = () => {
         throw new Error(error);
       } else {
         console.log(body);
-        response.status(200).json({});
+        response.json();
       }
     });
   });
