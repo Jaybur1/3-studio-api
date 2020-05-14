@@ -10,15 +10,15 @@ const getToken = () => {
     headers: { "content-type": "application/x-www-form-urlencoded" },
     form: {
       grant_type: "client_credentials",
-      client_id: process.env.AUTH_TOKENCLIENT_ID,
+      client_id: process.env.AUTH_TOKEN_CLIENT_ID,
       client_secret: process.env.AUTH_TOKEN_CLIENT_SECRET,
-      audience: process.env.AUTH_TOKEN_AUDIENCE,
-    },
+      audience: process.env.AUTH_TOKEN_AUDIENCE
+    }
   };
 
   return rp(tokenOptions)
-    .then((tokenResponse) => JSON.parse(tokenResponse).access_token)
-    .catch((err) => console.log(err));
+    .then(tokenResponse => JSON.parse(tokenResponse).access_token)
+    .catch(err => console.log(err));
 };
 
 module.exports = () => {
@@ -34,7 +34,7 @@ module.exports = () => {
       objectToChange.nickname = req.body.nickname;
     }
 
-    getToken().then((token) => {
+    getToken().then(token => {
       axios
         .patch(
           `${process.env.AUTH_USER_URL}${req.body.userId}`,
@@ -43,12 +43,12 @@ module.exports = () => {
             headers: {
               "content-type": "application/json",
               Authorization: `Bearer ${token}`,
-              "cache-control": "no-cache",
-            },
+              "cache-control": "no-cache"
+            }
           }
         )
-        .then((response) => resp.status(200).json({}))
-        .catch((error) => {
+        .then(response => resp.status(200).json({}))
+        .catch(error => {
           console.log(error);
           resp.status(400).json({});
         });
@@ -57,19 +57,20 @@ module.exports = () => {
 
   // Delete user (deactivate)
   router.delete("/users", (req, resp) => {
-    getToken().then((token) => {
+    getToken().then(token => {
+      console.log("token", token);
       axios
         .delete(`${process.env.AUTH_USER_URL}${req.body.userId}`, {
           headers: {
             "content-type": "application/json",
             Authorization: `Bearer ${token}`,
-            "cache-control": "no-cache",
-          },
+            "cache-control": "no-cache"
+          }
         })
-        .then((response) => {
+        .then(response => {
           resp.status(200).json({});
         })
-        .catch((error) => {
+        .catch(error => {
           console.log(error);
           resp.status(400).json({});
         });
@@ -85,9 +86,9 @@ module.exports = () => {
       body: {
         client_id: process.env.AUTH_CHANGE_PASSWORD_CLIENT_ID,
         email: req.body.email,
-        connection: "Username-Password-Authentication",
+        connection: "Username-Password-Authentication"
       },
-      json: true,
+      json: true
     };
 
     request(options, function(error, response, body) {
