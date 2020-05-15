@@ -7,7 +7,7 @@ module.exports = db => {
       request.query.projectId
     ])
       .then(data => {
-        response.json(data.rows[0]);
+        response.json(data.rows);
       })
       .catch(err => console.log(err));
   });
