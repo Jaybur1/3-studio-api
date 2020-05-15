@@ -14,11 +14,14 @@ module.exports = db => {
 
   // Create a new configuration
   router.post("/configurations", (request, response) => {
-    db.query("INSERT INTO configurations VALUES ($1, $2, $3)", [
-      request.body.configuration.name,
-      request.body.configuration.projectId,
-      request.body.configuration.data
-    ])
+    db.query(
+      "INSERT INTO (name, project_id, config_date) configurations VALUES ($1, $2, $3)",
+      [
+        request.body.configuration.name,
+        request.body.configuration.projectId,
+        request.body.configuration.data
+      ]
+    )
       .then(resp => {
         setTimeout(() => {
           response.status(400).json({});
@@ -40,6 +43,7 @@ module.exports = db => {
       if (resp.rowCount === 0) {
         response.status(400).json({});
       } else {
+        console.log("reached safely");
         response.status(200).json({});
       }
     });
