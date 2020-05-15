@@ -30,22 +30,17 @@ module.exports = db => {
   // Update an existing configuration
   router.put("/configurations", (request, response) => {
     db.query(
-      "UPDATE configurations SET name=$1, config_data=$2 FROM projects WHERE configurations.id=$3 and projects.user_id=$4",
+      "UPDATE configurations SET config_data=$1 FROM projects WHERE configurations.id=$2 and projects.user_id=$3",
       [
-        request.body.configuration.name,
-        request.body.configuration.data,
+        JSON.stringify(request.body.configuration.data),
         request.body.configuration.id,
         request.body.userId
       ]
     ).then(resp => {
       if (resp.rowCount === 0) {
-        setTimeout(() => {
-          response.status(400).json({});
-        }, 2000);
+        response.status(400).json({});
       } else {
-        setTimeout(() => {
-          response.status(200).json({});
-        }, 200);
+        response.status(200).json({});
       }
     });
   });
