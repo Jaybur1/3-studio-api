@@ -1,13 +1,15 @@
 const router = require("express").Router();
 
 module.exports = db => {
-  // Get all configureations
+  // Get all configurations
   router.get("/configurations", (request, response) => {
-    db.query("SELECT * FROM configurations WHERE user_id=$1", [
-      request.query.userId
-    ]).then(data => {
-      response.json(data.rows);
-    });
+    db.query("SELECT * FROM configurations WHERE project_id=$1", [
+      request.query.projectId
+    ])
+      .then(data => {
+        response.json(data.rows[0]);
+      })
+      .catch(err => console.log(err));
   });
 
   // Create a new configuration
