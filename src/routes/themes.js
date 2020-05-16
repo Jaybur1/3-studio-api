@@ -7,7 +7,6 @@ module.exports = db => {
       request.query.userId
     ])
       .then(resp => {
-        console.log(resp.rows);
         if (resp.rowCount === 0) {
           response.status(400).json({});
         } else {

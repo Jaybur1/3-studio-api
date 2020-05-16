@@ -19,7 +19,7 @@ module.exports = db => {
     const defaultConfig = createDefaultConfigurationDataString();
 
     db.query(
-      "INSERT INTO configurations (name, project_id, config_data) VALUES ($1, $2, $3)",
+      "INSERT INTO configurations (name, project_id, config_data) VALUES ($1, $2, $3) RETURNING *",
       [
         request.body.configuration.name,
         request.body.configuration.projectId,
@@ -27,7 +27,9 @@ module.exports = db => {
       ]
     )
       .then(resp => {
-        response.status(200).json({});
+        const { id } = resp.rows[0];
+
+        response.status(200).json({ id });
       })
       .catch(err => {
         console.log("hey error");
