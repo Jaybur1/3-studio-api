@@ -55,10 +55,34 @@ module.exports = () => {
     });
   });
 
+  // Update user profile picture
+  router.put("/users", (req, resp) => {
+    console.log(req, "inside user profile pic update");
+
+    // getToken().then(token => {
+    //   axios
+    //     .patch(
+    //       `${process.env.AUTH_USER_URL}${req.body.userId}`,
+    //       objectToChange,
+    //       {
+    //         headers: {
+    //           "content-type": "application/json",
+    //           Authorization: `Bearer ${token}`,
+    //           "cache-control": "no-cache"
+    //         }
+    //       }
+    //     )
+    //     .then(response => resp.status(200).json({}))
+    //     .catch(error => {
+    //       console.log(error);
+    //       resp.status(400).json({});
+    //     });
+    // });
+  });
+
   // Delete user (deactivate)
   router.delete("/users", (req, resp) => {
     getToken().then(token => {
-      console.log("token", token);
       axios
         .delete(`${process.env.AUTH_USER_URL}${req.body.userId}`, {
           headers: {
