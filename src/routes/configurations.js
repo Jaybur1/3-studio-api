@@ -62,15 +62,10 @@ module.exports = db => {
       [request.body.configurationId, request.body.userId]
     ).then(resp => {
       if (resp.rowCount === 0) {
-        // ? Simulate delay
-        setTimeout(() => {
-          response.status(400).json({});
-        }, 2000);
+        response.status(400).json({});
       } else {
         // ? Simulate delay
-        setTimeout(() => {
-          response.status(200).json({});
-        }, 2000);
+        response.status(200).json({});
       }
     });
   });
