@@ -50,7 +50,6 @@ module.exports = db => {
       if (resp.rowCount === 0) {
         response.status(400).json({});
       } else {
-        console.log("reached safely");
         response.status(200).json({});
       }
     });
