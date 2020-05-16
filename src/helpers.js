@@ -57,7 +57,7 @@ const createDefaultConfigurationDataString = () =>
     ambientLightColor: "ffffff",
     directionalLightColor: "ffffff",
     hemisphereLightColor: "ffffff",
-    materials: []
+    materials: {}
   });
 
 module.exports = {
