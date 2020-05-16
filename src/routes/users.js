@@ -56,28 +56,29 @@ module.exports = () => {
   });
 
   // Update user profile picture
-  router.put("/users", (req, resp) => {
-    console.log(req, "inside user profile pic update");
+  router.put("/users/picture", (req, resp) => {
+    getToken().then(token => {
+      const options = {
+        method: "PATCH",
+        url: `${process.env.AUTH_USER_URL}${req.body.userId}`,
+        headers: {
+          authorization: `Bearer ${token}`,
+          "content-type": "application/json"
+        },
+        body: { picture: req.body.picture },
+        json: true
+      };
 
-    // getToken().then(token => {
-    //   axios
-    //     .patch(
-    //       `${process.env.AUTH_USER_URL}${req.body.userId}`,
-    //       objectToChange,
-    //       {
-    //         headers: {
-    //           "content-type": "application/json",
-    //           Authorization: `Bearer ${token}`,
-    //           "cache-control": "no-cache"
-    //         }
-    //       }
-    //     )
-    //     .then(response => resp.status(200).json({}))
-    //     .catch(error => {
-    //       console.log(error);
-    //       resp.status(400).json({});
-    //     });
-    // });
+      request(options, function(error, response, body) {
+        if (error) {
+          resp.status(400).json({});
+          throw new Error(error);
+        } else {
+          console.log(body);
+          resp.status(200).json({});
+        }
+      });
+    });
   });
 
   // Delete user (deactivate)
