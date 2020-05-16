@@ -2,7 +2,8 @@ const router = require("express").Router();
 const {
   getScreenshotsForProject,
   deleteProjectFolder,
-  createProjectFolder
+  createProjectFolder,
+  createDefaultConfigurationDataString
 } = require("../helpers");
 
 module.exports = db => {
@@ -79,9 +80,21 @@ module.exports = db => {
         counter,
         createdAt: created_at
       };
+
+      // Create project folder on cloudinary
       createProjectFolder(id)
         .then(() => {
-          response.send(projectData);
+          // Create new configuration with defaults
+          db.query(
+            "INSERT INTO configurations (name, project_id, config_data) VALUES ('default', $1, $2)",
+            [id, createDefaultConfigurationDataString()]
+          )
+            .then(() => {
+              response.send(projectData);
+            })
+            .catch(err => {
+              console.log(err);
+            });
         })
         .catch(err => console.log(err));
     });
