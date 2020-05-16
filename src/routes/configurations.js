@@ -1,5 +1,7 @@
 const router = require("express").Router();
 
+const { createDefaultConfigurationDataString } = require("../helpers");
+
 module.exports = db => {
   // Get all configurations
   router.get("/configurations", (request, response) => {
@@ -14,20 +16,23 @@ module.exports = db => {
 
   // Create a new configuration
   router.post("/configurations", (request, response) => {
+    const defaultConfig = createDefaultConfigurationDataString();
+
     db.query(
-      "INSERT INTO (name, project_id, config_date) configurations VALUES ($1, $2, $3)",
+      "INSERT INTO configurations (name, project_id, config_data) VALUES ($1, $2, $3)",
       [
         request.body.configuration.name,
         request.body.configuration.projectId,
-        request.body.configuration.data
+        request.body.configuration.config_data || defaultConfig
       ]
     )
       .then(resp => {
-        setTimeout(() => {
-          response.status(400).json({});
-        }, 2000);
+        response.status(200).json({});
       })
-      .then(err => console.log(err));
+      .catch(err => {
+        console.log("hey error");
+        console.log(err);
+      });
   });
 
   // Update an existing configuration
