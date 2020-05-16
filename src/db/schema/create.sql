@@ -9,7 +9,7 @@ CREATE TABLE projects (
   name VARCHAR(255) NOT NULL,
   description TEXT NOT NULL,
   user_id TEXT NOT NULL,
-  default_thumbnail TEXT NOT NULL DEFAULT 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTpu7CL3YZ2G5jL3nyW2CdsedQ6QumMLlzUqk8jdCghfPCqRSQr&usqp=CAU',
+  default_thumbnail TEXT NOT NULL DEFAULT 'https://res.cloudinary.com/aajfinal/image/upload/v1589639332/testLogo3_wnu30f.png',
   model_link TEXT NOT NULL,
   counter INTEGER NOT NULL DEFAULT 0,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
