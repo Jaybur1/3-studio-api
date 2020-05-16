@@ -1,49 +1,56 @@
 const router = require("express").Router();
 
+const { createDefaultConfigurationDataString } = require("../helpers");
+
 module.exports = db => {
-  // Get all configureations
+  // Get all configurations
   router.get("/configurations", (request, response) => {
-    db.query("SELECT * FROM configurations WHERE user_id=$1", [
-      request.query.userId
-    ]).then(data => {
-      response.json(data.rows);
-    });
+    db.query("SELECT * FROM configurations WHERE project_id=$1", [
+      request.query.projectId
+    ])
+      .then(data => {
+        response.json(data.rows);
+      })
+      .catch(err => console.log(err));
   });
 
   // Create a new configuration
   router.post("/configurations", (request, response) => {
-    db.query("INSERT INTO configurations VALUES ($1, $2, $3)", [
-      request.body.configuration.name,
-      request.body.configuration.projectId,
-      request.body.configuration.data
-    ])
+    const defaultConfig = createDefaultConfigurationDataString();
+
+    db.query(
+      "INSERT INTO configurations (name, project_id, config_data) VALUES ($1, $2, $3) RETURNING *",
+      [
+        request.body.configuration.name,
+        request.body.configuration.projectId,
+        request.body.configuration.config_data || defaultConfig
+      ]
+    )
       .then(resp => {
-        setTimeout(() => {
-          response.status(400).json({});
-        }, 2000);
+        const { id } = resp.rows[0];
+
+        response.status(200).json({ id });
       })
-      .then(err => console.log(err));
+      .catch(err => {
+        console.log("hey error");
+        console.log(err);
+      });
   });
 
   // Update an existing configuration
   router.put("/configurations", (request, response) => {
     db.query(
-      "UPDATE configurations SET name=$1, config_data=$2 FROM projects WHERE configurations.id=$3 and projects.user_id=$4",
+      "UPDATE configurations SET config_data=$1 FROM projects WHERE configurations.id=$2 and projects.user_id=$3",
       [
-        request.body.configuration.name,
-        request.body.configuration.data,
+        JSON.stringify(request.body.configuration.data),
         request.body.configuration.id,
         request.body.userId
       ]
     ).then(resp => {
       if (resp.rowCount === 0) {
-        setTimeout(() => {
-          response.status(400).json({});
-        }, 2000);
+        response.status(400).json({});
       } else {
-        setTimeout(() => {
-          response.status(200).json({});
-        }, 200);
+        response.status(200).json({});
       }
     });
   });
@@ -55,15 +62,10 @@ module.exports = db => {
       [request.body.configurationId, request.body.userId]
     ).then(resp => {
       if (resp.rowCount === 0) {
-        // ? Simulate delay
-        setTimeout(() => {
-          response.status(400).json({});
-        }, 2000);
+        response.status(400).json({});
       } else {
         // ? Simulate delay
-        setTimeout(() => {
-          response.status(200).json({});
-        }, 2000);
+        response.status(200).json({});
       }
     });
   });
