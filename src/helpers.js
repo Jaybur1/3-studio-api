@@ -2,7 +2,7 @@ const cloudinary = require("cloudinary");
 const axios = require("axios");
 
 cloudinary.config({
-  cloud_name: "aajfinal",
+  cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
@@ -32,7 +32,7 @@ const deleteProjectFolder = projectId =>
 
 const createProjectFolder = projectId =>
   axios.post(
-    `https://${process.env.CLOUDINARY_API_KEY}:${process.env.CLOUDINARY_API_SECRET}@api.cloudinary.com/v1_1/aajfinal/folders/screenshots/${projectId}`
+    `https://${process.env.CLOUDINARY_API_KEY}:${process.env.CLOUDINARY_API_SECRET}@api.cloudinary.com/v1_1/${process.env.CLOUD_NAME}/folders/screenshots/${projectId}`
   );
 
 const createDefaultConfigurationDataString = () =>
@@ -44,9 +44,9 @@ const createDefaultConfigurationDataString = () =>
     currentEnvironmentOption: {
       name: "studio-1",
       hdrPath:
-        "https://res.cloudinary.com/aajfinal/raw/upload/v1589352709/environments/studio-1_ugueaj.hdr",
+        "https://res.cloudinary.com/cloud3studio/raw/upload/v1591147171/environments/studio-1_gihmwv.hdr",
       imgPath:
-        "https://res.cloudinary.com/aajfinal/image/upload/v1589352866/environments/studio-1_sl7xag.jpg"
+        "https://res.cloudinary.com/cloud3studio/image/upload/v1591147462/environments/studio-1_sl7xag_pmeaql.jpg"
     },
     ambientLight: true,
     directionalLight: true,
